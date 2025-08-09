@@ -55,6 +55,7 @@ const headerEl = document.getElementById('top');
 const celebrationEl = document.getElementById('celebration');
 const goalVideo = document.getElementById('goalVideo');
 const cheerAudio = document.getElementById('cheerAudio');
+const booAudio = document.getElementById('booAudio');
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -238,6 +239,10 @@ function check() {
     stars = Math.max(0, stars - 1);
     sched.reschedule(card, false, false);
     showNumberLineHint();
+    if (booAudio && booAudio.getAttribute('src')) {
+      booAudio.currentTime = 0;
+      booAudio.play().catch(() => {});
+    }
     speak(`Not quite. ${card.a} times ${card.b} is ${ans}.`, nextQuestion);
   }
   saveProgress();
