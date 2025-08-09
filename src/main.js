@@ -35,6 +35,7 @@ let stars = 0;
 let colorHue = 0;
 let bgHue = 0.65;
 let lastSecond = -1;
+let userIp = 'unknown';
 
 const sideEl = document.getElementById('side');
 const timesList = document.getElementById('times');
@@ -51,6 +52,27 @@ const canvas = document.getElementById('hintCanvas');
 const ctx = canvas.getContext('2d');
 const progressEl = document.getElementById('progress');
 const headerEl = document.getElementById('top');
+const celebrationEl = document.getElementById('celebration');
+const goalVideo = document.getElementById('goalVideo');
+const cheerAudio = document.getElementById('cheerAudio');
+
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.width * 0.525;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+fetch('https://api.ipify.org?format=json')
+  .then((r) => r.json())
+  .then((d) => {
+    userIp = d.ip;
+  })
+  .catch(() => {})
+  .finally(() => {
+    storage.appendUsage({ timestamp: new Date().toISOString(), ip: userIp, event: 'start' });
+  });
 
 progressEl.max = cards.length;
 
@@ -148,6 +170,40 @@ function logTime(a, b, elapsed, correct, fast) {
   timesList.scrollTop = timesList.scrollHeight;
 }
 
+function recordUsage(a, b, elapsed, correct) {
+  storage.appendUsage({
+    timestamp: new Date().toISOString(),
+    ip: userIp,
+    a,
+    b,
+    elapsed,
+    correct,
+  });
+}
+
+function playCelebration() {
+  if (
+    !goalVideo ||
+    !cheerAudio ||
+    !goalVideo.getAttribute('src') ||
+    !cheerAudio.getAttribute('src')
+  ) {
+    return;
+  }
+  celebrationEl.style.display = 'flex';
+  goalVideo.currentTime = 0;
+  cheerAudio.currentTime = 0;
+  goalVideo
+    .play()
+    .catch(() => {
+      celebrationEl.style.display = 'none';
+    });
+  cheerAudio.play().catch(() => {});
+  goalVideo.onended = () => {
+    celebrationEl.style.display = 'none';
+  };
+}
+
 function check() {
   if (!card) return;
   const txt = answerEl.value.trim();
@@ -161,6 +217,7 @@ function check() {
   card.record(u === ans, elapsed);
   const fast = elapsed <= FAST_THRESHOLD_SEC;
   logTime(card.a, card.b, elapsed, u === ans, fast);
+  recordUsage(card.a, card.b, elapsed, u === ans);
   if (hintTimeout) {
     clearTimeout(hintTimeout);
     hintTimeout = null;
@@ -174,6 +231,7 @@ function check() {
     sched.reschedule(card, true, fast);
     speak(`Correct! ${card.a} times ${card.b} equals ${ans}.`, nextQuestion);
     confetti = new Confetti(canvas.width, canvas.height);
+    playCelebration();
   } else {
     feedbackEl.textContent = `Not quite. It's ${ans}.`;
     feedbackEl.style.color = '#ef4444';
@@ -301,8 +359,8 @@ function drawNumberLine() {
 
 function render() {
   bgHue = (bgHue + 0.0015) % 1;
-  const bg = hsvToHex(bgHue, 0.35, 0.2);
-  const panel = hsvToHex((bgHue + 0.08) % 1, 0.3, 0.25);
+  const bg = hsvToHex(bgHue, 0.2, 0.95);
+  const panel = hsvToHex((bgHue + 0.08) % 1, 0.15, 0.9);
   document.body.style.background = bg;
   sideEl.style.background = bg;
   headerEl.style.background = panel;
