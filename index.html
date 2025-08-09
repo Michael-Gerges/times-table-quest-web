@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Times Table Quest</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <aside id="side">
+    <h2>Times (previous)</h2>
+    <ul id="times"></ul>
+  </aside>
+
+  <header id="top">
+    <h1>Times Table Quest</h1>
+    <div id="status">Streak 0 | Stars 0 | Mastered 0/0</div>
+    <div id="timer">0.0s</div>
+  </header>
+
+  <main id="main">
+    <div id="question"></div>
+    <div id="inputRow">
+      <input id="answer" autocomplete="off" />
+      <button id="check">Check</button>
+    </div>
+    <div id="feedback"></div>
+    <canvas id="hintCanvas" width="800" height="420"></canvas>
+    <div id="controls">
+      <button id="toggleHint">Toggle Hint</button>
+      <progress id="progress" value="0" max="0"></progress>
+      <button id="skip">Skip</button>
+      <button id="exit">Exit</button>
+    </div>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

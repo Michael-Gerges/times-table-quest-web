@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  background: #0b1026;
+  color: #e5e7eb;
+  font-family: Arial, sans-serif;
+  display: flex;
+}
+
+#side {
+  width: 200px;
+  padding: 12px;
+  background: #0b1026;
+}
+
+#side h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+#times {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+header#top {
+  position: fixed;
+  top: 0;
+  left: 200px;
+  right: 0;
+  background: #111a3a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+
+header#top h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #7dd3fc;
+}
+
+#timer {
+  font-weight: bold;
+}
+
+main {
+  margin-left: 200px;
+  padding: 80px 12px 12px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#question {
+  text-align: center;
+  font-size: 28px;
+  margin: 16px 0;
+}
+
+#inputRow {
+  text-align: center;
+}
+
+#answer {
+  font-size: 24px;
+  width: 80px;
+  text-align: center;
+}
+
+button {
+  font-size: 16px;
+  padding: 6px 12px;
+  margin-left: 6px;
+}
+
+#feedback {
+  text-align: center;
+  min-height: 24px;
+  margin: 8px 0;
+}
+
+#hintCanvas {
+  display: block;
+  margin: 12px auto;
+  background: #111a3a;
+}
+
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
