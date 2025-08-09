@@ -31,4 +31,16 @@ export function appendUsage(entry) {
   } catch {
     /* ignore */
   }
+  try {
+    if (typeof fetch === 'function') {
+      fetch('/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry),
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch {
+    /* ignore */
+  }
 }
