@@ -1,4 +1,5 @@
 const KEY = 'mult_memory_v1';
+const LOG_KEY = 'usage_logs_v1';
 
 /** Load stored data object. */
 export function load() {
@@ -20,3 +21,14 @@ export function clear() {
 }
 
 export { KEY as STORAGE_KEY };
+
+/** Append a usage log entry. */
+export function appendUsage(entry) {
+  try {
+    const logs = JSON.parse(localStorage.getItem(LOG_KEY)) || [];
+    logs.push(entry);
+    localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+  } catch {
+    /* ignore */
+  }
+}
