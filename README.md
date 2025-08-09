@@ -9,12 +9,17 @@ npm install
 npm run dev    # start dev server
 npm run build  # produce production bundle
 npm test       # run unit tests
-npm run server # start logging server
 ```
 
-## Usage logging
+## Usage Logging
 
-Run `npm run server` to start a minimal HTTP server that stores usage
-entries in `usage-log.json`. The client posts each session start and
-question result to `/log`. View the accumulated records by visiting
-`http://localhost:3000/logs` or inspecting the `usage-log.json` file.
+Usage is recorded to [Netlify Blobs](https://docs.netlify.com/blobs/)
+via serverless functions. For local development, run `netlify dev` and
+visit [`/logs.html`](http://localhost:8888/logs.html) to view the latest
+entries. In production deployments the same page requires the password
+**albert**.
+
+Endpoints:
+
+* **Write**: `POST /.netlify/functions/log`
+* **Read**: `GET /.netlify/functions/logs-read?password=albert`

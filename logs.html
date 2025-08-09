@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Usage Logs</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: .5rem; text-align: left; }
+    th { background: #f7f7f7; position: sticky; top: 0; }
+    .muted { color: #666; font-size: .9em; }
+    #login { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Usage Logs</h1>
+  <div id="login">
+    <label>Password: <input type="password" id="pwd"></label>
+    <button onclick="load()">Load Logs</button>
+  </div>
+  <p class="muted">Showing the most recent 500 events.</p>
+  <table>
+    <thead><tr><th>Time (UTC)</th><th>IP</th><th>Event</th><th>Meta</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="4">No data loaded.</td></tr></tbody>
+  </table>
+  <script>
+    async function load() {
+      const pw = document.getElementById('pwd').value;
+      const el = document.getElementById('rows');
+      try {
+        const res = await fetch('/.netlify/functions/logs-read?password=' + encodeURIComponent(pw));
+        if (res.status === 401) {
+          el.innerHTML = '<tr><td colspan="4">Unauthorized</td></tr>';
+          return;
+        }
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          el.innerHTML = '<tr><td colspan="4">No events yet.</td></tr>';
+          return;
+        }
+        el.innerHTML = data.reverse().map(e => {
+          const meta = Object.assign({}, e);
+          const ts = meta.ts; delete meta.ts;
+          const ip = meta.ip; delete meta.ip;
+          const ev = meta.event; delete meta.event;
+          return `<tr>
+            <td>${ts || ''}</td>
+            <td>${ip || ''}</td>
+            <td>${ev || ''}</td>
+            <td><pre style="margin:0;white-space:pre-wrap">${JSON.stringify(meta, null, 2)}</pre></td>
+          </tr>`;
+        }).join('');
+      } catch (err) {
+        el.innerHTML = `<tr><td colspan="4">Failed to load logs</td></tr>`;
+      }
+    }
+  </script>
+</body>
+</html>

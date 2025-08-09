@@ -40,6 +40,22 @@
     <audio id="booAudio" src="/assets/crowd disappointment.mp3" preload="none"></audio>
   </div>
 
+  <a href="/logs.html">View usage logs</a>
+
   <script type="module" src="/src/main.js"></script>
+  <script>
+  (function () {
+    try {
+      fetch('/.netlify/functions/log', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          event: 'page_view',
+          meta: { path: location.pathname, ua: navigator.userAgent }
+        })
+      });
+    } catch (e) {}
+  })();
+  </script>
 </body>
 </html>
