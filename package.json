@@ -17,6 +17,6 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.0.8"
+    "@netlify/blobs": "10.0.8"
   }
 }
