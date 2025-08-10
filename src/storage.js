@@ -33,7 +33,7 @@ export function appendUsage(entry) {
   }
   try {
     if (typeof fetch === 'function') {
-      fetch('/log', {
+      fetch('/.netlify/functions/log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(entry),
