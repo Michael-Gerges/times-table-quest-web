@@ -158,6 +158,12 @@ function nextQuestion() {
   }
   qEl.textContent = `What is ${card.a} × ${card.b} ?`;
   qEl.style.color = stableQuestionColor(card.a, card.b);
+  if (goalVideo) {
+    const src = card.a === 4 && card.b === 9 ? '/assets/ronaldo_.mp4' : '/assets/videoshort.mp4';
+    if (goalVideo.getAttribute('src') !== src) {
+      goalVideo.setAttribute('src', src);
+    }
+  }
   answerEl.disabled = false;
   checkBtn.disabled = false;
   answerEl.value = '';
