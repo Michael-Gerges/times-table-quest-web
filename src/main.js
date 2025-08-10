@@ -11,11 +11,11 @@ const TICK_SOUND = false;
 
 const CHEERS = [
   'Well done Albert!',
-  'Good job Bero!',
+  'Good job Biro!',
   'Amazing Albert!',
-  'Great work, Bero!',
+  'Great work, Biro!',
   'Superb, Albert!',
-  'You rock, Bero!',
+  'You rock, Biro!',
 ];
 
 let cards = [];
@@ -35,6 +35,8 @@ const sideEl = document.getElementById('side');
 const timesList = document.getElementById('times');
 const qEl = document.getElementById('question');
 const answerEl = document.getElementById('answer');
+const answerDisplay = document.getElementById('answerDisplay');
+const keypadEl = document.getElementById('keypad');
 const checkBtn = document.getElementById('check');
 const feedbackEl = document.getElementById('feedback');
 const timerEl = document.getElementById('timer');
@@ -51,6 +53,13 @@ const goalVideo = document.getElementById('goalVideo');
 const cheerAudio = document.getElementById('cheerAudio');
 const booAudio = document.getElementById('booAudio');
 const tableSelect = document.getElementById('tableSelect');
+
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].forEach((n) => {
+  const btn = document.createElement('button');
+  btn.textContent = String(n);
+  btn.dataset.digit = String(n);
+  keypadEl.appendChild(btn);
+});
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -74,8 +83,14 @@ checkBtn.addEventListener('click', check);
 skipBtn.addEventListener('click', skip);
 exitBtn.addEventListener('click', exitApp);
 toggleHintBtn.addEventListener('click', toggleHint);
-answerEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') check();
+keypadEl.addEventListener('click', (e) => {
+  if (e.target.matches('button')) {
+    const digit = e.target.dataset.digit;
+    if (typeof digit !== 'undefined' && !answerEl.disabled) {
+      answerEl.value += digit;
+      answerDisplay.textContent = answerEl.value;
+    }
+  }
 });
 tableSelect.addEventListener('change', () => {
   init(parseInt(tableSelect.value, 10));
@@ -136,16 +151,16 @@ function saveProgress() {
 
 function speak(text, onDone) {
   if (!('speechSynthesis' in window)) {
-    onDone && onDone();
+    onDone && setTimeout(onDone, 500);
     return;
   }
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 1;
-  u.onend = () => onDone && onDone();
+  u.onend = () => setTimeout(() => onDone && onDone(), 500);
   try {
     window.speechSynthesis.speak(u);
   } catch {
-    onDone && onDone();
+    onDone && setTimeout(onDone, 500);
   }
 }
 
@@ -163,11 +178,16 @@ function nextQuestion() {
     if (goalVideo.getAttribute('src') !== src) {
       goalVideo.setAttribute('src', src);
     }
+    goalVideo.load();
+  }
+  if (cheerAudio) {
+    cheerAudio.load();
   }
   answerEl.disabled = false;
   checkBtn.disabled = false;
   answerEl.value = '';
-  answerEl.focus();
+  answerDisplay.textContent = '';
+  keypadEl.querySelectorAll('button').forEach((b) => (b.disabled = false));
   feedbackEl.textContent = '';
   feedbackEl.style.color = '#93c5fd';
   hintMode = 'placeholder';
@@ -241,7 +261,7 @@ function check() {
   if (!card) return;
   const txt = answerEl.value.trim();
   if (!/^\d+$/.test(txt)) {
-    feedbackEl.textContent = 'Please type a number.';
+    feedbackEl.textContent = 'Please tap a number.';
     return;
   }
   const u = parseInt(txt, 10);
@@ -257,6 +277,7 @@ function check() {
   }
   answerEl.disabled = true;
   checkBtn.disabled = true;
+  keypadEl.querySelectorAll('button').forEach((b) => (b.disabled = true));
   if (u === ans) {
     const msg = CHEERS[Math.floor(Math.random() * CHEERS.length)];
     feedbackEl.textContent = `${msg} (${elapsed.toFixed(1)}s)`;
