@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Times Table Quest</title>
+  <title>Albert's Times Table Quest</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -13,7 +13,24 @@
   </aside>
 
   <header id="top">
-    <h1>Times Table Quest</h1>
+    <h1>Albert's Times Table Quest</h1>
+    <div id="tablePicker">
+      <label for="tableSelect">Table:</label>
+      <select id="tableSelect">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+    </div>
     <div id="status">Streak 0 | Stars 0 | Mastered 0/0</div>
     <div id="timer">0.0s</div>
   </header>
