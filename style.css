@@ -45,6 +45,12 @@ header#top h1 {
   color: #d97706;
 }
 
+#tablePicker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 #timer {
   font-weight: bold;
 }

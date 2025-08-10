@@ -3,29 +3,23 @@ import { stableQuestionColor, hsvToHex } from './colors.js';
 import { Confetti } from './confetti.js';
 import * as storage from './storage.js';
 
-const RANGES = [
-  [3, 1, 12],
-  [4, 1, 5],
-];
+const DEFAULT_TABLE = 3;
 const FAST_THRESHOLD_SEC = 3.0;
 const HINT_DELAY_MS = 10000;
 const TIMER_INTERVAL_MS = 250;
 const TICK_SOUND = false;
 
-let cards = buildDeck(RANGES);
-const stored = storage.load();
-cards.forEach((c) => {
-  const rec = stored[c.key];
-  if (rec) {
-    c.box = rec.box || 0;
-    c.streak = rec.streak || 0;
-    c.avgTime = rec.avg_time || null;
-    c.attempts = rec.attempts || 0;
-    c.corrects = rec.corrects || 0;
-  }
-});
+const CHEERS = [
+  'Well done Albert!',
+  'Good job Bero!',
+  'Amazing Albert!',
+  'Great work, Bero!',
+  'Superb, Albert!',
+  'You rock, Bero!',
+];
 
-const sched = new Scheduler(cards);
+let cards = [];
+let sched = null;
 let card = null;
 let questionStart = null;
 let hintTimeout = null;
@@ -56,6 +50,7 @@ const celebrationEl = document.getElementById('celebration');
 const goalVideo = document.getElementById('goalVideo');
 const cheerAudio = document.getElementById('cheerAudio');
 const booAudio = document.getElementById('booAudio');
+const tableSelect = document.getElementById('tableSelect');
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -75,8 +70,6 @@ fetch('https://api.ipify.org?format=json')
     storage.appendUsage({ timestamp: new Date().toISOString(), ip: userIp, event: 'start' });
   });
 
-progressEl.max = cards.length;
-
 checkBtn.addEventListener('click', check);
 skipBtn.addEventListener('click', skip);
 exitBtn.addEventListener('click', exitApp);
@@ -84,6 +77,39 @@ toggleHintBtn.addEventListener('click', toggleHint);
 answerEl.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') check();
 });
+tableSelect.addEventListener('change', () => {
+  init(parseInt(tableSelect.value, 10));
+});
+
+function init(table) {
+  if (hintTimeout) {
+    clearTimeout(hintTimeout);
+    hintTimeout = null;
+  }
+  tableSelect.value = String(table);
+  cards = buildDeck([[table, 1, 12]]);
+  const stored = storage.load();
+  cards.forEach((c) => {
+    const rec = stored[c.key];
+    if (rec) {
+      c.box = rec.box || 0;
+      c.streak = rec.streak || 0;
+      c.avgTime = rec.avg_time || null;
+      c.attempts = rec.attempts || 0;
+      c.corrects = rec.corrects || 0;
+    }
+  });
+  sched = new Scheduler(cards);
+  card = null;
+  questionStart = null;
+  hintMode = 'placeholder';
+  confetti = null;
+  stars = 0;
+  timesList.innerHTML = '';
+  progressEl.max = cards.length;
+  updateStatus();
+  nextQuestion();
+}
 
 function totalMastered() {
   return cards.filter((c) => c.mastered()).length;
@@ -226,11 +252,12 @@ function check() {
   answerEl.disabled = true;
   checkBtn.disabled = true;
   if (u === ans) {
-    feedbackEl.textContent = `Correct! (${elapsed.toFixed(1)}s)`;
+    const msg = CHEERS[Math.floor(Math.random() * CHEERS.length)];
+    feedbackEl.textContent = `${msg} (${elapsed.toFixed(1)}s)`;
     feedbackEl.style.color = '#22c55e';
     stars += 1;
     sched.reschedule(card, true, fast);
-    speak(`Correct! ${card.a} times ${card.b} equals ${ans}.`, nextQuestion);
+    speak(`${msg} ${card.a} times ${card.b} equals ${ans}.`, nextQuestion);
     confetti = new Confetti(canvas.width, canvas.height);
     playCelebration();
   } else {
@@ -381,5 +408,5 @@ function render() {
   requestAnimationFrame(render);
 }
 
-nextQuestion();
+init(DEFAULT_TABLE);
 render();
