@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background: #fffbeb;
-  color: #1f2937;
+  background: #f0f9ff;
+  color: #0f172a;
   font-family: Arial, sans-serif;
   display: flex;
 }
@@ -9,7 +9,7 @@ body {
 #side {
   width: 200px;
   padding: 12px;
-  background: #fff1f2;
+  background: #e0f2fe;
 }
 
 #side h2 {
@@ -31,7 +31,8 @@ header#top {
   top: 0;
   left: 200px;
   right: 0;
-  background: #fde68a;
+  background: #1d4ed8;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -42,7 +43,7 @@ header#top {
 header#top h1 {
   margin: 0;
   font-size: 24px;
-  color: #d97706;
+  color: #fff;
 }
 
 #tablePicker {
@@ -70,18 +71,35 @@ main {
 
 #inputRow {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-#answer {
+#answerDisplay {
+  font-size: 32px;
+  min-height: 40px;
+  color: #111827;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.keypad button {
   font-size: 24px;
-  width: 80px;
-  text-align: center;
+  padding: 12px;
+  margin: 0;
 }
 
 button {
   font-size: 16px;
   padding: 6px 12px;
   margin-left: 6px;
+  color: #fff;
 }
 
 #feedback {
@@ -93,7 +111,7 @@ button {
 #hintCanvas {
   display: block;
   margin: 12px auto;
-  background: #fde68a;
+  background: #e0f2fe;
   width: 100%;
   height: auto;
 }
@@ -107,8 +125,8 @@ button {
 }
 
 button {
-  background: #fcd34d;
-  border: 1px solid #f59e0b;
+  background: #2563eb;
+  border: 1px solid #1e40af;
   border-radius: 4px;
 }
 
@@ -149,8 +167,5 @@ button {
   }
   #question {
     font-size: 24px;
-  }
-  #answer {
-    width: 60px;
   }
 }
