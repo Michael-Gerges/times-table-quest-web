@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background: #f0f9ff;
-  color: #0f172a;
+  background: #ffffff;
+  color: #000000;
   font-family: Arial, sans-serif;
   display: flex;
 }
@@ -9,7 +9,7 @@ body {
 #side {
   width: 200px;
   padding: 12px;
-  background: #e0f2fe;
+  background: #f1f5f9;
 }
 
 #side h2 {
@@ -31,11 +31,13 @@ header#top {
   top: 0;
   left: 200px;
   right: 0;
-  background: #1d4ed8;
+  background: #1e3a8a;
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
   padding: 8px 16px;
   box-sizing: border-box;
 }
@@ -63,6 +65,12 @@ header#top h1 {
 
 #timer {
   font-weight: bold;
+  margin-left: auto;
+}
+
+#usageLink {
+  color: #fff;
+  text-decoration: underline;
 }
 
 main {
@@ -109,6 +117,9 @@ button {
   padding: 6px 12px;
   margin-left: 6px;
   color: #fff;
+  background: #1d4ed8;
+  border: 1px solid #1e40af;
+  border-radius: 4px;
 }
 
 #feedback {
@@ -120,7 +131,7 @@ button {
 #hintCanvas {
   display: block;
   margin: 12px auto;
-  background: #e0f2fe;
+  background: #f1f5f9;
   width: 100%;
   height: auto;
 }
@@ -131,12 +142,6 @@ button {
   align-items: center;
   gap: 8px;
   margin-top: 8px;
-}
-
-button {
-  background: #2563eb;
-  border: 1px solid #1e40af;
-  border-radius: 4px;
 }
 
 #celebration {
@@ -169,6 +174,8 @@ button {
     position: static;
     left: 0;
     right: 0;
+    flex-direction: column;
+    align-items: flex-start;
   }
   main {
     margin-left: 0;
@@ -176,5 +183,22 @@ button {
   }
   #question {
     font-size: 24px;
+  }
+  #timer {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  header#top h1 {
+    font-size: 20px;
+  }
+  #tablePicker label,
+  #tablePicker select {
+    font-size: 18px;
+  }
+  .keypad button {
+    font-size: 20px;
+    padding: 10px;
   }
 }
