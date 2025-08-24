@@ -22,8 +22,8 @@ export function clear() {
 
 export { KEY as STORAGE_KEY };
 
-/** Append a usage log entry. */
-export function appendUsage(entry) {
+/** Append a submission log entry. */
+export function appendSubmission(entry) {
   try {
     const logs = JSON.parse(localStorage.getItem(LOG_KEY)) || [];
     logs.push(entry);
@@ -33,7 +33,7 @@ export function appendUsage(entry) {
   }
   try {
     if (typeof fetch === 'function') {
-      fetch('/.netlify/functions/log', {
+      fetch('/.netlify/functions/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(entry),
