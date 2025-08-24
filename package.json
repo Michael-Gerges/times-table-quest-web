@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "netlify dev",
-    "build": "rm -rf dist && mkdir -p dist && cp -r index.html submissions.html style.css assets public src dist"
+    "build": "rm -rf dist && mkdir -p dist && cp -r index.html submissions.html style.css assets src dist"
   },
   "dependencies": {
     "@netlify/blobs": "^8.0.0"
