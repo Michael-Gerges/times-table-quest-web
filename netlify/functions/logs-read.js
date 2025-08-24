@@ -7,7 +7,18 @@ export async function handler(event) {
     return { statusCode: 401, body: 'Unauthorized' }
   }
 
-  const store = getStore('usage')
+  const siteID = process.env.BLOBS_SITE_ID
+  const token = process.env.BLOBS_READWRITE_TOKEN
+
+  if (!siteID || !token) {
+    return {
+      statusCode: 500,
+      body:
+        'Missing Netlify Blob configuration. Set BLOBS_SITE_ID and BLOBS_READWRITE_TOKEN.',
+    }
+  }
+
+  const store = getStore('usage', { siteID, token })
   const data = (await store.get('events.jsonl', { type: 'text' })) || ''
   const rows = data
     .trim()
