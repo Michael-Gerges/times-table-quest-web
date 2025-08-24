@@ -422,13 +422,10 @@ function drawNumberLine() {
 }
 
 function render() {
-  bgHue = (bgHue + 0.0015) % 1;
-  const bg = hsvToHex(bgHue, 0.2, 0.95);
-  const panel = hsvToHex((bgHue + 0.08) % 1, 0.15, 0.9);
-  document.body.style.background = bg;
-  sideEl.style.background = bg;
-  headerEl.style.background = panel;
-  canvas.style.background = panel;
+  document.body.style.background = '#ffffff';
+  sideEl.style.background = '#f1f5f9';
+  headerEl.style.background = '#1e3a8a';
+  canvas.style.background = '#f1f5f9';
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (hintMode === 'array') drawArray();

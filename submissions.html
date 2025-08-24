@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Submissions Log</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    body { font-family: system-ui, sans-serif; margin: 2rem; background: #ffffff; color: #000; }
     table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: .5rem; text-align: left; }
-    th { background: #f7f7f7; position: sticky; top: 0; }
+    th, td { border: 1px solid #666; padding: .5rem; text-align: left; }
+    th { background: #e2e8f0; position: sticky; top: 0; }
     .muted { color: #666; font-size: .9em; }
     #login { margin-bottom: 1rem; }
   </style>
@@ -21,10 +21,11 @@
   </div>
   <p class="muted">Showing the most recent 500 events.</p>
   <table>
-    <thead><tr><th>Time (EST)</th><th>IP</th><th>Event</th><th>Meta</th></tr></thead>
+    <thead><tr><th>Question</th><th>Answer</th><th>Time (s)</th><th>Result</th></tr></thead>
     <tbody id="rows"><tr><td colspan="4">No data loaded.</td></tr></tbody>
   </table>
   <script>
+    const FAST_THRESHOLD_SEC = 3.0;
     async function load() {
       const pw = document.getElementById('pwd').value;
       const el = document.getElementById('rows');
@@ -35,20 +36,26 @@
           return;
         }
         const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) {
+        const answers = Array.isArray(data) ? data.filter(e => e.event === 'answer').reverse() : [];
+        if (answers.length === 0) {
           el.innerHTML = '<tr><td colspan="4">No events yet.</td></tr>';
           return;
         }
-        el.innerHTML = data.reverse().map(e => {
-          const meta = Object.assign({}, e);
-          const ts = meta.ts; delete meta.ts;
-          const ip = meta.ip; delete meta.ip;
-          const ev = meta.event; delete meta.event;
+        el.innerHTML = answers.map(e => {
+          const parts = (e.question || '').split('×');
+          const a = parseInt(parts[0], 10);
+          const b = parseInt(parts[1], 10);
+          const correctAns = a * b;
+          const given = parseInt(e.answer, 10);
+          const correct = given === correctAns;
+          const fast = correct && e.elapsed <= FAST_THRESHOLD_SEC;
+          const result = correct ? (fast ? '✅⚡' : '✅') : '✖';
+          const elapsed = typeof e.elapsed === 'number' ? e.elapsed.toFixed(1) : '';
           return `<tr>
-            <td>${ts || ''}</td>
-            <td>${ip || ''}</td>
-            <td>${ev || ''}</td>
-            <td><pre style="margin:0;white-space:pre-wrap">${JSON.stringify(meta, null, 2)}</pre></td>
+            <td>${e.question || ''}</td>
+            <td>${e.answer || ''}</td>
+            <td>${elapsed}</td>
+            <td>${result}</td>
           </tr>`;
         }).join('');
       } catch (err) {
