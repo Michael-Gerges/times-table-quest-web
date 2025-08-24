@@ -21,8 +21,8 @@
   </div>
   <p class="muted">Showing the most recent 500 events.</p>
   <table>
-    <thead><tr><th>Question</th><th>Answer</th><th>Time (s)</th><th>Result</th></tr></thead>
-    <tbody id="rows"><tr><td colspan="4">No data loaded.</td></tr></tbody>
+    <thead><tr><th>IP</th><th>Time (EST)</th><th>Event</th><th>Question</th><th>Answer</th><th>Time (s)</th><th>Result</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="7">No data loaded.</td></tr></tbody>
   </table>
   <script>
     const FAST_THRESHOLD_SEC = 3.0;
@@ -32,26 +32,30 @@
       try {
         const res = await fetch('/.netlify/functions/list?password=' + encodeURIComponent(pw));
         if (res.status === 401) {
-          el.innerHTML = '<tr><td colspan="4">Unauthorized</td></tr>';
+          el.innerHTML = '<tr><td colspan="7">Unauthorized</td></tr>';
           return;
         }
         const data = await res.json();
-        const answers = Array.isArray(data) ? data.filter(e => e.event === 'answer').reverse() : [];
-        if (answers.length === 0) {
-          el.innerHTML = '<tr><td colspan="4">No events yet.</td></tr>';
+        const events = Array.isArray(data) ? data.slice(-500).reverse() : [];
+        if (events.length === 0) {
+          el.innerHTML = '<tr><td colspan="7">No events yet.</td></tr>';
           return;
         }
-        el.innerHTML = answers.map(e => {
-          const parts = (e.question || '').split('×');
+        el.innerHTML = events.map(e => {
+          const isAnswer = e.event === 'answer';
+          const parts = (isAnswer && e.question || '').split('×');
           const a = parseInt(parts[0], 10);
           const b = parseInt(parts[1], 10);
           const correctAns = a * b;
           const given = parseInt(e.answer, 10);
-          const correct = given === correctAns;
+          const correct = isAnswer && given === correctAns;
           const fast = correct && e.elapsed <= FAST_THRESHOLD_SEC;
-          const result = correct ? (fast ? '✅⚡' : '✅') : '✖';
-          const elapsed = typeof e.elapsed === 'number' ? e.elapsed.toFixed(1) : '';
+          const result = isAnswer ? (correct ? (fast ? '✅⚡' : '✅') : '✖') : '';
+          const elapsed = isAnswer && typeof e.elapsed === 'number' ? e.elapsed.toFixed(1) : '';
           return `<tr>
+            <td>${e.ip || ''}</td>
+            <td>${e.ts || ''}</td>
+            <td>${e.event || ''}</td>
             <td>${e.question || ''}</td>
             <td>${e.answer || ''}</td>
             <td>${elapsed}</td>
@@ -59,7 +63,7 @@
           </tr>`;
         }).join('');
       } catch (err) {
-        el.innerHTML = `<tr><td colspan="4">Failed to load logs</td></tr>`;
+        el.innerHTML = `<tr><td colspan="7">Failed to load logs</td></tr>`;
       }
     }
   </script>

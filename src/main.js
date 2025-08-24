@@ -338,7 +338,7 @@ function tickTimer() {
 setInterval(tickTimer, TIMER_INTERVAL_MS);
 
 function drawPlaceholder() {
-  ctx.fillStyle = '#e5e7eb';
+  ctx.fillStyle = '#1f2937';
   ctx.font = '16px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Try it in your head…', canvas.width / 2, 40);
@@ -367,7 +367,7 @@ function drawArray() {
       ctx.fill();
     }
   }
-  ctx.fillStyle = '#e5e7eb';
+  ctx.fillStyle = '#1f2937';
   ctx.font = '14px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(`${rows} rows × ${cols} columns`, w / 2, 22);
@@ -381,7 +381,7 @@ function drawNumberLine() {
   const h = canvas.height;
   const pad = 40;
   const y = h / 2;
-  ctx.strokeStyle = '#ffffff';
+  ctx.strokeStyle = '#334155';
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(pad, y);
@@ -395,7 +395,7 @@ function drawNumberLine() {
     ctx.moveTo(x, y - 8);
     ctx.lineTo(x, y + 8);
     ctx.stroke();
-    ctx.fillStyle = '#e5e7eb';
+    ctx.fillStyle = '#1f2937';
     ctx.font = '12px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(String(i * a), x, y + 22);
@@ -415,7 +415,7 @@ function drawNumberLine() {
     ctx.textAlign = 'center';
     ctx.fillText(`+${a}`, xm, y - 42);
   }
-  ctx.fillStyle = '#e5e7eb';
+  ctx.fillStyle = '#1f2937';
   ctx.font = '14px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(`Number line: ${a} repeated ${b} times = ${total}`, w / 2, 22);
@@ -425,7 +425,7 @@ function render() {
   document.body.style.background = '#ffffff';
   sideEl.style.background = '#f1f5f9';
   headerEl.style.background = '#1e3a8a';
-  canvas.style.background = '#f1f5f9';
+  canvas.style.background = '#ffffff';
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (hintMode === 'array') drawArray();
