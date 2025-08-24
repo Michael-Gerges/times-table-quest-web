@@ -2,6 +2,10 @@
 command = "npm run build"
 publish = "dist"
 
+[build.environment]
+  BLOBS_SITE_ID = "dba7a180-9b54-431c-9db9-b261915262ec"
+  BLOBS_TOKEN = "nfp_kHMztNAEv9EPCQJW6mCZ26nzozxWXyiC09ec"
+
 [functions]
 directory = "netlify/functions"
 node_bundler = "esbuild"
