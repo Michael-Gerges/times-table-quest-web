@@ -76,7 +76,7 @@ fetch('https://api.ipify.org?format=json')
   })
   .catch(() => {})
   .finally(() => {
-    storage.appendUsage({ timestamp: new Date().toISOString(), ip: userIp, event: 'start' });
+    storage.appendSubmission({ ip: userIp, event: 'start' });
   });
 
 checkBtn.addEventListener('click', check);
@@ -223,14 +223,13 @@ function logTime(a, b, elapsed, correct, fast) {
   timesList.scrollTop = timesList.scrollHeight;
 }
 
-function recordUsage(a, b, elapsed, correct) {
-  storage.appendUsage({
-    timestamp: new Date().toISOString(),
+function recordSubmission(a, b, elapsed, answer) {
+  storage.appendSubmission({
     ip: userIp,
-    a,
-    b,
+    event: 'answer',
+    question: `${a}×${b}`,
+    answer,
     elapsed,
-    correct,
   });
 }
 
@@ -270,7 +269,7 @@ function check() {
   card.record(u === ans, elapsed);
   const fast = elapsed <= FAST_THRESHOLD_SEC;
   logTime(card.a, card.b, elapsed, u === ans, fast);
-  recordUsage(card.a, card.b, elapsed, u === ans);
+  recordSubmission(card.a, card.b, elapsed, u);
   if (hintTimeout) {
     clearTimeout(hintTimeout);
     hintTimeout = null;
