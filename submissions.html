@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submissions Log</title>
+</head>
+<body>
+  <h1>Submissions Log</h1>
+  <pre id="log"></pre>
+  <script type="module">
+    try {
+      const res = await fetch('/.netlify/functions/list');
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('log').textContent = data.entries.join('\n');
+      } else {
+        document.getElementById('log').textContent = 'Failed to load log';
+      }
+    } catch (e) {
+      document.getElementById('log').textContent = e.message;
+    }
+  </script>
+</body>
+</html>

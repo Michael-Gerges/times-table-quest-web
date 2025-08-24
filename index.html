@@ -59,19 +59,19 @@
     <audio id="booAudio" src="/assets/crowd disappointment.mp3" preload="none"></audio>
   </div>
 
-  <a href="/logs.html">View usage logs</a>
+  <a href="/submissions.html">View usage logs</a>
 
   <script type="module" src="/src/main.js"></script>
-  <script>
-  (function () {
+  <script type="module">
+  (async () => {
     try {
-      fetch('/.netlify/functions/log', {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const { ip } = await ipRes.json();
+      const value = `${new Date().toISOString()}\t${ip}\tpage_view\tpath=${location.pathname} ua=${navigator.userAgent}`;
+      await fetch('/.netlify/functions/submit', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          event: 'page_view',
-          meta: { path: location.pathname, ua: navigator.userAgent }
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value })
       });
     } catch (e) {}
   })();
