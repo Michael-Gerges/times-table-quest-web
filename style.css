@@ -52,6 +52,15 @@ header#top h1 {
   gap: 4px;
 }
 
+#tablePicker label {
+  font-size: 24px;
+}
+
+#tablePicker select {
+  font-size: 24px;
+  padding: 4px 8px;
+}
+
 #timer {
   font-weight: bold;
 }

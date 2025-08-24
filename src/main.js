@@ -11,11 +11,11 @@ const TICK_SOUND = false;
 
 const CHEERS = [
   'Well done Albert!',
-  'Good job Biro!',
+  'Good job Beero!',
   'Amazing Albert!',
-  'Great work, Biro!',
+  'Great work, Beero!',
   'Superb, Albert!',
-  'You rock, Biro!',
+  'You rock, Beero!',
 ];
 
 let cards = [];
@@ -60,6 +60,10 @@ const tableSelect = document.getElementById('tableSelect');
   btn.dataset.digit = String(n);
   keypadEl.appendChild(btn);
 });
+const backBtn = document.createElement('button');
+backBtn.textContent = '⌫';
+backBtn.dataset.action = 'backspace';
+keypadEl.appendChild(backBtn);
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -84,12 +88,14 @@ skipBtn.addEventListener('click', skip);
 exitBtn.addEventListener('click', exitApp);
 toggleHintBtn.addEventListener('click', toggleHint);
 keypadEl.addEventListener('click', (e) => {
-  if (e.target.matches('button')) {
-    const digit = e.target.dataset.digit;
-    if (typeof digit !== 'undefined' && !answerEl.disabled) {
+  if (e.target.matches('button') && !answerEl.disabled) {
+    const { digit, action } = e.target.dataset;
+    if (digit !== undefined) {
       answerEl.value += digit;
-      answerDisplay.textContent = answerEl.value;
+    } else if (action === 'backspace') {
+      answerEl.value = answerEl.value.slice(0, -1);
     }
+    answerDisplay.textContent = answerEl.value;
   }
 });
 tableSelect.addEventListener('change', () => {
