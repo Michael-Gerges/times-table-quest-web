@@ -17,7 +17,14 @@ export async function handler(event) {
     }
   }
 
-  const store = getStore('usage', { siteID, token })
+  // Since this function runs outside the Netlify runtime context, we need to
+  // explicitly pass the store name along with the site ID and access token.
+  // The `getStore` API expects a single options object when providing manual
+  // credentials; passing the name as the first argument is only valid when the
+  // environment variables have already been configured. Using the options
+  // object ensures the library receives the required configuration even when
+  // running locally.
+  const store = getStore({ name: 'usage', siteID, token })
   const data = (await store.get('events.jsonl', { type: 'text' })) || ''
   const rows = data
     .trim()
