@@ -8,13 +8,12 @@ export async function handler(event) {
   }
 
   const siteID = process.env.BLOBS_SITE_ID
-  const token = process.env.BLOBS_READWRITE_TOKEN
+  const token = process.env.BLOBS_TOKEN || process.env.BLOBS_READWRITE_TOKEN
 
   if (!siteID || !token) {
     return {
       statusCode: 500,
-      body:
-        'Missing Netlify Blob configuration. Set BLOBS_SITE_ID and BLOBS_READWRITE_TOKEN.',
+      body: 'Missing Netlify Blob configuration. Set BLOBS_SITE_ID and BLOBS_TOKEN.',
     }
   }
 
